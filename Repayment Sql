@@ -1,4 +1,6 @@
 
+-- select * from m_payment_type mpt ;
+
 INSERT INTO fineract_finasiacapital.acc_gl_journal_entry
 (account_id, office_id, reversal_id, currency_code, transaction_id, loan_transaction_id, savings_transaction_id, client_transaction_id, reversed, ref_num, manual_entry, entry_date, type_enum, amount, description, entity_type_enum, entity_id, createdby_id, lastmodifiedby_id, created_date, lastmodified_date, is_running_balance_calculated, office_running_balance, organization_running_balance, payment_details_id, share_transaction_id, transaction_date, is_voucher, voucher_cv_id, journal_entry_transaction_type_enum, closure_entry_id)
 --  Transaction Repaymnet(Total) -- NOT mapped
@@ -228,7 +230,7 @@ null                                    asclient_transaction_id,
 null                                    as ref_num,
 0                                       asmanual_entry,
 date(mlt.transaction_date  )              as entry_date,
-2                                       as type_enum,
+1                                       as type_enum,
 mlt.excess_amount      as amount,
 concat('Repayment Received (Overpayment) :',ml.display_loan_account_no ,' , Name: ',mc.display_name ) as description,
 1                                       as entity_type_enum,
@@ -650,4 +652,6 @@ gst.trxid
 having sum(gst.gst)>0 ) gst  on gst.loanid=ml.id 
 inner  join m_loan_transaction mlt on mlt.id=gst.trxid
 left join m_client mc on mc.id=ml.client_id  
+
+
 
