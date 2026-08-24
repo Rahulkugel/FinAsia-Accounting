@@ -1,0 +1,253 @@
+--  TRANCHE DISBURSEEMNT 
+use fineract_finasiacapital;
+
+-- THIS IS FOR  TRANCHE DISBURSEMENT
+
+
+ INSERT INTO acc_gl_journal_entry
+(account_id, office_id, reversal_id, currency_code, transaction_id, loan_transaction_id, savings_transaction_id, client_transaction_id, reversed, ref_num, manual_entry, entry_date, type_enum, amount, description, entity_type_enum, entity_id, createdby_id, lastmodifiedby_id, created_date, lastmodified_date, is_running_balance_calculated, office_running_balance, organization_running_balance, payment_details_id, share_transaction_id, transaction_date, is_voucher, voucher_cv_id, journal_entry_transaction_type_enum, closure_entry_id)
+--  THIS   IS DIBSURSEMENT ACCOUNTING 
+--  Loan Portfolio (Loan Amount)        STEP  1   (DEBIT)
+select 
+main.*
+from (
+--  Loan Portfolio (Loan Amount)        STEP  1   (DEBIT)
+select 
+apm.gl_account_id                       as account_id,
+1                                       as  office_id,
+null                                    as  reversal_id,
+'INR'                                 as currency_code,
+concat('L',mlt.id)                      as   transaction_id,
+mlt.id                                  as  loan_transaction_id,
+null                                    as savings_transaction_id,
+null                                    as client_transaction_id,
+0                                       as  reversed,
+null                                    as  ref_num,
+0                                       as manual_entry,
+date(mlt.transaction_date)              as  entry_date,
+2                                       as  type_enum,
+mlt.amount                              as  amount,
+concat('Loan disbursed for account : ',ml.display_loan_account_no ,' , Name: ',mc.display_name ) as  description,
+1                                       as  entity_type_enum,
+mlt.loan_id                             as  entity_id,
+1                                       as  createdby_id,
+1                                       as  lastmodifiedby_id,
+CURRENT_DATE()                          as  created_date,
+CURRENT_DATE()                          as lastmodified_date,
+1                                       as  is_running_balance_calculated,
+0                                       as office_running_balance,
+0                                       as organization_running_balance,
+null                                  as     payment_details_id,
+null                                    as  share_transaction_id,
+null                                    as  transaction_date,
+0                                       as  is_voucher,
+null                                    as  voucher_cv_id,
+null                                    as  journal_entry_transaction_type_enum,
+null                                    as  closure_entry_id
+-- mlt.loan_id as lid,
+-- mlt.id as trxid,
+-- mlt.amount,
+-- apm.gl_account_id ,
+-- aga.name as ledgername,
+-- mpt.value as paymenttype,
+-- concat('Loan disbursed for account : ',ml.display_loan_account_no ,' , Name: ',mc.display_name ) as descr
+from m_loan_transaction mlt 
+inner join (
+select 
+mlt.id as trxid,
+mlt.loan_id as lid
+from m_loan_transaction mlt 
+where mlt.transaction_type_enum =1 and mlt.is_reversed =0
+and mlt.id not in (select 
+min(mlt.id ) as trxid
+from m_loan_transaction mlt 
+where mlt.transaction_type_enum =1 and mlt.is_reversed =0
+group by mlt.loan_id )
+and date(mlt.transaction_date) >="2026-04-01" and date(mlt.transaction_date ) <="2026-08-17" ) maxtrx  on maxtrx.lid= mlt.loan_id  and maxtrx.trxid=mlt.id 
+left join m_loan ml on ml.id =mlt.loan_id
+left join m_client mc on mc.id=ml.client_id 
+left join m_payment_detail mpd on mpd.id =mlt.payment_detail_id 
+left join m_payment_type mpt on mpt.id =mpd.payment_type_id 
+left join acc_product_mapping apm on apm.product_id =ml.product_id 
+left join acc_gl_account aga on aga.id =apm.gl_account_id 
+where ml.loan_status_id !=500 and ml.loan_status_id >=300
+and ml.id not in (535,550,592,651,223,231,539,569,573,574,543,650,693,643)
+and apm.financial_account_type =2
+-- and mlt.loan_id =${loanid}
+union all
+--   STEP  2                 (  CREDIT   )    Fund Source (NetDisbursement)     
+--  payment type id is not present
+select 
+apm.gl_account_id                       as account_id,
+1                                       as  office_id,
+null                                    as reversal_id,
+'INR'                                 as currency_code,
+concat('L',mlt.id)                      as   transaction_id,
+mlt.id                                  as  loan_transaction_id,
+null                                    as savings_transaction_id,
+null                                    as client_transaction_id,
+0                                       as  reversed,
+null                                    as  ref_num,
+0                                       as manual_entry,
+date(mlt.transaction_date)              as  entry_date,
+1                                       as  type_enum,
+mlt.amount as  amount,
+concat('Loan disbursed for account : ',ml.display_loan_account_no ,' , Name: ',mc.display_name ) as  description,
+1                                       as  entity_type_enum,
+mlt.loan_id                             as  entity_id,
+1                                       as  createdby_id,
+1                                       as  lastmodifiedby_id,
+CURRENT_DATE()                          as  created_date,
+CURRENT_DATE()                          as lastmodified_date,
+1                                       as  is_running_balance_calculated,
+0                                       as office_running_balance,
+0                                       as organization_running_balance,
+null                                  as     payment_details_id,
+null                                    as  share_transaction_id,
+null                                    as  transaction_date,
+0                                       as  is_voucher,
+null                                    as  voucher_cv_id,
+null                                    as  journal_entry_transaction_type_enum,
+null                                    as  closure_entry_id
+-- ml.id as loanid,
+-- mlt.id as trxid,
+-- mlt.amount-charges.totalchargeamount as Netdisbursement,
+-- apm.gl_account_id ,
+-- aga.name as ledgername,
+-- mpt.value as paymenttype,
+-- mpt.id as paymenttypeid,
+-- concat('Loan disbursed for account : ',ml.display_loan_account_no ,' , Name: ',mc.display_name ) as descr
+from m_loan_transaction mlt 
+inner join (
+select 
+mlt.id as trxid,
+mlt.loan_id as lid
+from m_loan_transaction mlt 
+where mlt.transaction_type_enum =1 and mlt.is_reversed =0
+and mlt.id not in (select 
+min(mlt.id ) as trxid
+from m_loan_transaction mlt 
+where mlt.transaction_type_enum =1 and mlt.is_reversed =0
+group by mlt.loan_id )
+and date(mlt.transaction_date) >="2026-04-01" and date(mlt.transaction_date ) <="2026-08-17" ) maxtrx  on maxtrx.lid= mlt.loan_id  and maxtrx.trxid=mlt.id 
+left join m_loan ml on ml.id =mlt.loan_id
+left join m_client mc on mc.id=ml.client_id 
+left join m_payment_detail mpd on mpd.id =mlt.payment_detail_id 
+left join m_payment_type mpt on mpt.id =mpd.payment_type_id 
+left join acc_product_mapping apm on apm.product_id =ml.product_id 
+left join acc_gl_account aga on aga.id =apm.gl_account_id 
+where  ml.loan_status_id !=500 and ml.loan_status_id >=300 and 
+ml.id not in (535,550,592,651,223,231,539,569,573,574,543,650,693,643) and 
+apm.financial_account_type =1 and mpt.id is null and  apm.payment_type is null
+-- and mlt.loan_id =${loanid}
+union all 
+--    Payment type is present 
+select 
+apm.gl_account_id                       as account_id,
+1                                       as  office_id,
+null                                    as reversal_id,
+'INR'                                 as currency_code,
+concat('L',mlt.id)                      as   transaction_id,
+mlt.id                                  as  loan_transaction_id,
+null                                    as savings_transaction_id,
+null                                    as client_transaction_id,
+0                                       as  reversed,
+null                                    as  ref_num,
+0                                       as manual_entry,
+date(mlt.transaction_date)              as  entry_date,
+1                                       as  type_enum,
+mlt.amount   as  amount,
+concat('Loan disbursed for account : ',ml.display_loan_account_no ,' , Name: ',mc.display_name ) as  description,
+1                                       as  entity_type_enum,
+mlt.loan_id                             as  entity_id,
+1                                       as  createdby_id,
+1                                       as  lastmodifiedby_id,
+CURRENT_DATE()                          as  created_date,
+CURRENT_DATE()                          as lastmodified_date,
+1                                       as  is_running_balance_calculated,
+0                                       as office_running_balance,
+0                                       as organization_running_balance,
+null                                  as     payment_details_id,
+null                                    as  share_transaction_id,
+null                                    as  transaction_date,
+0                                       as  is_voucher,
+null                                    as  voucher_cv_id,
+null                                    as  journal_entry_transaction_type_enum,
+null                                    as  closure_entry_id
+-- ml.id  as loanid,
+-- mlt.id as trxid,
+-- mlt.amount-charges.totalchargeamount as netdisbursement,
+-- apm.gl_account_id ,
+-- aga.name as ledgername,
+-- mpt.value as paymenttype,
+-- mpt.id as paymenttypeid,
+-- concat('Loan disbursed for account : ',ml.display_loan_account_no ,' , Name: ',mc.display_name ) as descr
+from m_loan_transaction mlt 
+inner join (
+select 
+mlt.id as trxid,
+mlt.loan_id as lid
+from m_loan_transaction mlt 
+where mlt.transaction_type_enum =1 and mlt.is_reversed =0
+and mlt.id not in (select 
+min(mlt.id ) as trxid
+from m_loan_transaction mlt 
+where mlt.transaction_type_enum =1 and mlt.is_reversed =0
+group by mlt.loan_id )
+and date(mlt.transaction_date) >="2026-04-01" and date(mlt.transaction_date ) <="2026-08-17") maxtrx  on maxtrx.lid= mlt.loan_id  and maxtrx.trxid=mlt.id 
+left join m_loan ml on ml.id =mlt.loan_id
+left join m_client mc on mc.id=ml.client_id 
+inner  join m_payment_detail mpd on mpd.id =mlt.payment_detail_id 
+inner  join m_payment_type mpt on mpt.id =mpd.payment_type_id 
+inner  join acc_product_mapping apm on apm.product_id =ml.product_id 
+left join acc_gl_account aga on aga.id =apm.gl_account_id 
+where ml.loan_status_id !=500 and ml.loan_status_id >=300 and 
+ml.id not in (535,550,592,651,223,231,539,569,573,574,543,650,693,643)
+and apm.financial_account_type =1 and mpt.id is not  null and  apm.payment_type is not null
+-- and mlt.loan_id =${loanid}
+)
+main
+-- where entity_id  =${loanid};
+
+
+
+
+
+
+
+--  THIS FOR  TRANCHE DISBURSEEMNT 
+
+
+select 
+t_count.*,
+mldd.*
+from m_loan ml 
+inner  join (select 
+mldd.loan_id as lid ,
+count(mldd.loan_id ) as countlid 
+from m_loan_disbursement_detail mldd 
+where mldd.disbursedon_date is not null
+group by mldd.loan_id 
+having count(mldd.loan_id ) >1) t_count on t_count.lid=ml.id 
+inner join m_loan_disbursement_detail mldd on mldd.loan_id =ml.id 
+where ml.loan_status_id !=500 and ml.loan_status_id >=300
+and ml.id not in (535,550,592,651,223,231,539,569,573,574,543,650,693,643)
+and mldd.disbursedon_date is not null 
+and date(mldd.disbursedon_date) >="2026-04-01" and date(mldd.disbursedon_date) <="2026-08-17";
+
+
+
+
+
+
+select 
+mlt.id 
+from m_loan_transaction mlt 
+where mlt.transaction_type_enum =1 and mlt.is_reversed =0
+and mlt.id not in (select 
+min(mlt.id ) as trxid
+from m_loan_transaction mlt 
+where mlt.transaction_type_enum =1 and mlt.is_reversed =0
+group by mlt.loan_id )
+and date(mlt.transaction_date) >="2026-04-01" and date(mlt.transaction_date ) <="2026-08-17";
+
