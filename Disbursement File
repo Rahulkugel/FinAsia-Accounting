@@ -4,12 +4,10 @@ use fineract_finasiacapital;
 
 
 
--- INSERT INTO acc_gl_journal_entry
--- (account_id, office_id, reversal_id, currency_code, transaction_id, loan_transaction_id, savings_transaction_id, client_transaction_id, reversed, ref_num, manual_entry, entry_date, type_enum, amount, description, entity_type_enum, entity_id, createdby_id, lastmodifiedby_id, created_date, lastmodified_date, is_running_balance_calculated, office_running_balance, organization_running_balance, payment_details_id, share_transaction_id, transaction_date, is_voucher, voucher_cv_id, journal_entry_transaction_type_enum, closure_entry_id)
+ INSERT INTO acc_gl_journal_entry
+(account_id, office_id, reversal_id, currency_code, transaction_id, loan_transaction_id, savings_transaction_id, client_transaction_id, reversed, ref_num, manual_entry, entry_date, type_enum, amount, description, entity_type_enum, entity_id, createdby_id, lastmodifiedby_id, created_date, lastmodified_date, is_running_balance_calculated, office_running_balance, organization_running_balance, payment_details_id, share_transaction_id, transaction_date, is_voucher, voucher_cv_id, journal_entry_transaction_type_enum, closure_entry_id)
 --  THIS   IS DIBSURSEMENT ACCOUNTING 
 --  Loan Portfolio (Loan Amount)        STEP  1   (DEBIT)
-
-
 select 
 main.*
 from (
@@ -67,7 +65,8 @@ left join m_payment_detail mpd on mpd.id =mlt.payment_detail_id
 left join m_payment_type mpt on mpt.id =mpd.payment_type_id 
 left join acc_product_mapping apm on apm.product_id =ml.product_id 
 left join acc_gl_account aga on aga.id =apm.gl_account_id 
-where  ml.disbursedon_date >="2026-04-01" and ml.loan_status_id !=500 and ml.loan_status_id >=300
+where  ml.disbursedon_date >="2026-04-01" and ml.disbursedon_date <="2026-08-17" and ml.loan_status_id !=500 and ml.loan_status_id >=300
+and ml.id not in (535,550,592,651,223,231,539,569,573,574,543,650,693,643)
 and apm.financial_account_type =2
 -- and mlt.loan_id =${loanid}
 union all
@@ -141,7 +140,8 @@ left join m_payment_detail mpd on mpd.id =mlt.payment_detail_id
 left join m_payment_type mpt on mpt.id =mpd.payment_type_id 
 left join acc_product_mapping apm on apm.product_id =ml.product_id 
 left join acc_gl_account aga on aga.id =apm.gl_account_id 
-where  ml.disbursedon_date >="2026-04-01" and ml.loan_status_id !=500 and ml.loan_status_id >=300 and 
+where  ml.disbursedon_date >="2026-04-01" and ml.disbursedon_date <="2026-08-17" and ml.loan_status_id !=500 and ml.loan_status_id >=300 and 
+ml.id not in (535,550,592,651,223,231,539,569,573,574,543,650,693,643) and 
 apm.financial_account_type =1 and mpt.id is null and  apm.payment_type is null
 -- and mlt.loan_id =${loanid}
 union all 
@@ -215,8 +215,10 @@ inner  join m_payment_type mpt on mpt.id =mpd.payment_type_id
 inner  join acc_product_mapping apm on apm.product_id =ml.product_id 
 left join acc_gl_account aga on aga.id =apm.gl_account_id 
 where
- ml.disbursedon_date >="2026-04-01" and ml.loan_status_id !=500 and ml.loan_status_id >=300 and 
-apm.financial_account_type =1 and mpt.id is not  null and  apm.payment_type is not null
+ml.disbursedon_date >="2026-04-01" and ml.disbursedon_date <="2026-08-17"
+and ml.loan_status_id !=500 and ml.loan_status_id >=300 and 
+ml.id not in (535,550,592,651,223,231,539,569,573,574,543,650,693,643)
+and apm.financial_account_type =1 and mpt.id is not  null and  apm.payment_type is not null
 -- and mlt.loan_id =${loanid}
 union all
 --   CHARGES   CGST
@@ -271,7 +273,9 @@ from m_loan_transaction mlt
 where mlt.transaction_type_enum =1 and mlt.is_reversed =0
 group by mlt.loan_id ) maxtrx  on maxtrx.lid=ml.id 
 left join m_client mc on mc.id=ml.client_id 
-where ml.disbursedon_date >="2026-04-01" and ml.loan_status_id !=500 and ml.loan_status_id >=300 and  
+where ml.disbursedon_date >="2026-04-01" and ml.disbursedon_date <="2026-08-17" and 
+ml.id not in (535,550,592,651,223,231,539,569,573,574,543,650,693,643)
+and ml.loan_status_id !=500 and ml.loan_status_id >=300 and  
 -- mlc.loan_id =${loanid} and 
 mlc.is_active =1 and mlc.charge_time_enum =1
 group by mlc.loan_id 
@@ -330,7 +334,9 @@ group by mlt.loan_id ) maxtrx  on maxtrx.lid=ml.id
 left join m_client mc on mc.id=ml.client_id  
 where 
  -- mlc.loan_id =${loanid} and
-mlc.is_active =1 and mlc.charge_time_enum =1 and ml.disbursedon_date >="2026-04-01" and ml.loan_status_id !=500 and ml.loan_status_id >=300
+ml.disbursedon_date >="2026-04-01" and ml.disbursedon_date <="2026-08-17" and 
+mlc.is_active =1 and mlc.charge_time_enum =1  and ml.loan_status_id !=500 and ml.loan_status_id >=300
+and ml.id not in (535,550,592,651,223,231,539,569,573,574,543,650,693,643)
 group by mlc.loan_id 
 union all   -- Charge mapped
 --   STEP  3                 (  CREDIT   )    Charges
@@ -394,9 +400,11 @@ group by mlt.loan_id ) maxtrx  on maxtrx.lid=ml.id
 left join m_client mc on mc.id=ml.client_id 
 inner join acc_product_mapping apm on apm.product_id =ml.product_id  and apm.charge_id =mlc.charge_id
 left join acc_gl_account aga on aga.id =apm.gl_account_id 
-where ml.disbursedon_date >="2026-04-01" and ml.loan_status_id !=500 and ml.loan_status_id >=300 and 
+where ml.disbursedon_date >="2026-04-01" and ml.disbursedon_date <="2026-08-17" 
+and ml.loan_status_id !=500 and ml.loan_status_id >=300 
+and ml.id not in (535,550,592,651,223,231,539,569,573,574,543,650,693,643)
  -- mlc.loan_id =${loanid} and
-mlc.is_active =1 and mlc.charge_time_enum =1
+and mlc.is_active =1 and mlc.charge_time_enum =1
 union all   --  Charge not mapped
 select 
 apm.gl_account_id                       as account_id,
@@ -466,9 +474,12 @@ where apm.gl_account_id is null) unmapcharge on unmapcharge.lid=ml.id and unmapc
 left join m_client mc on mc.id=ml.client_id 
 left join acc_product_mapping apm on apm.product_id =ml.product_id  
 left join acc_gl_account aga on aga.id =apm.gl_account_id 
-where ml.disbursedon_date >="2026-04-01" and ml.loan_status_id !=500 and ml.loan_status_id >=300 and 
+where 
+ml.disbursedon_date >="2026-04-01" and ml.disbursedon_date <="2026-08-17" 
+ and ml.loan_status_id !=500 and ml.loan_status_id >=300 
+ and ml.id not in (535,550,592,651,223,231,539,569,573,574,543,650,693,643)
 -- mlc.loan_id =${loanid} and
-mlc.is_active =1 and mlc.charge_time_enum =1 and apm.financial_account_type =4  and apm.charge_id is  null and apm.advance_charge_id is null
+and mlc.is_active =1 and mlc.charge_time_enum =1 and apm.financial_account_type =4  and apm.charge_id is  null and apm.advance_charge_id is null
 union all 
 --  Transaction Repaymnet(Interest)
 select 
@@ -477,8 +488,8 @@ apm.gl_account_id                       as account_id,
 1                                       as office_id,
 null                                    as reversal_id,
 'INR'                                as currency_code,
-concat('L',mlt.id )                      as   transaction_id,
-mlt.id                                 as loan_transaction_id,
+concat('L',maxtrx.trxid )                      as   transaction_id,
+maxtrx.trxid                                as loan_transaction_id,
 null                                    assavings_transaction_id,
 null                                    asclient_transaction_id,
 0                                       as reversed,
@@ -506,15 +517,22 @@ null                                    as journal_entry_transaction_type_enum,
 null                                    as closure_entry_id
 from m_loan ml 
 inner join m_loan_transaction mlt on  mlt.loan_id =ml.id 
+inner  join (
+select 
+mlt.loan_id as lid ,
+min(mlt.id ) as trxid
+from m_loan_transaction mlt 
+where mlt.transaction_type_enum =1 and mlt.is_reversed =0
+group by mlt.loan_id ) maxtrx  on maxtrx.lid=ml.id 
 left join m_client mc on mc.id=ml.client_id 
 left join acc_product_mapping apm on apm.product_id =ml.product_id  
 left join acc_gl_account aga on aga.id =apm.gl_account_id 
 where 
+ml.disbursedon_date >="2026-04-01" and ml.disbursedon_date <="2026-08-17" 
+and ml.id not in (535,550,592,651,223,231,539,569,573,574,543,650,693,643)
 -- mlt.loan_id  =${loanid} and 
-apm.financial_account_type=7
+and apm.financial_account_type=7
 and mlt.transaction_type_enum in (26) and mlt.is_reversed =0  and mlt.interest_portion_derived is not null and mlt.interest_portion_derived >0 and mlt.principal_portion_derived is null
-
 )
 main
-where entity_id  =${loanid};
-
+-- where entity_id  =${loanid};
