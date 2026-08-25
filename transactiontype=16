@@ -1,0 +1,169 @@
+-- ------------------------------------------------------------------------------------------------------
+
+--  OVERPAYMENT LIABLITIES(REFUND)
+
+--  This for transaction type enum 16
+
+INSERT INTO fineract_finasiacapital.acc_gl_journal_entry
+(account_id, office_id, reversal_id, currency_code, transaction_id, loan_transaction_id, savings_transaction_id, client_transaction_id, reversed, ref_num, manual_entry, entry_date, type_enum, amount, description, entity_type_enum, entity_id, createdby_id, lastmodifiedby_id, created_date, lastmodified_date, is_running_balance_calculated, office_running_balance, organization_running_balance, payment_details_id, share_transaction_id, transaction_date, is_voucher, voucher_cv_id, journal_entry_transaction_type_enum, closure_entry_id)
+--  Transaction Repaymnet(Total) -- NOT mapped
+select 
+distinct 
+-- aga.name as ledgername,
+apm.gl_account_id                       as account_id,
+1                                       as office_id,
+null                                    as reversal_id,
+'INR'                                as currency_code,
+concat('L',mlt.id )                      as   transaction_id,
+mlt.id                                 as loan_transaction_id,
+null                                    assavings_transaction_id,
+null                                    asclient_transaction_id,
+0                                       as reversed,
+null                                    as ref_num,
+0                                       asmanual_entry,
+date(mlt.transaction_date  )              as entry_date,
+2                                       as type_enum,
+mlt.amount     as amount,
+null as description,
+1                                       as entity_type_enum,
+ml.id                            as entity_id,
+1                                       as createdby_id,
+1                                       as lastmodifiedby_id,
+CURRENT_DATE()                          as created_date,
+CURRENT_DATE()                          aslastmodified_date,
+1                                       as is_running_balance_calculated,
+0                                       asoffice_running_balance,
+0                                       asorganization_running_balance,
+null                                 as     payment_details_id,
+null                                    as share_transaction_id,
+null                                    as transaction_date,
+0                                       as is_voucher,
+null                                    as voucher_cv_id,
+null                                    as journal_entry_transaction_type_enum,
+null                                    as closure_entry_id
+from m_loan ml 
+inner join m_loan_transaction mlt on  mlt.loan_id =ml.id 
+left join m_client mc on mc.id=ml.client_id 
+left join acc_product_mapping apm on apm.product_id =ml.product_id  
+left join acc_gl_account aga on aga.id =apm.gl_account_id 
+where
+-- mlt.loan_id  =${loanid} and
+apm.financial_account_type=11
+and mlt.transaction_type_enum  in (16) and mlt.is_reversed =0 and apm.payment_type is null and 
+mlt.id not in (select 
+distinct 
+mlt.id 
+from m_loan ml 
+inner join m_loan_transaction mlt on  mlt.loan_id =ml.id 
+inner join m_payment_detail mpd on mpd.id =mlt.payment_detail_id 
+inner join m_payment_type mpt on mpt.id =mpd.payment_type_id 
+inner  join m_client mc on mc.id=ml.client_id 
+inner join acc_product_mapping apm on apm.product_id =ml.product_id and apm.payment_type =mpt.id
+inner join acc_gl_account aga on aga.id =apm.gl_account_id  
+where 
+-- mlt.loan_id  =${loanid} and
+apm.financial_account_type=1 
+and mlt.transaction_type_enum  in (2,31) and mlt.is_reversed =0
+and date(mlt.transaction_date) >'2026-03-31' and mlt.is_reversed =0 and 
+ ml.loan_status_id  >=300  and ml.loan_status_id !=500
+and date(mlt.transaction_date) <='2026-08-17')
+and date(mlt.transaction_date) >'2026-03-31' and mlt.is_reversed =0 and 
+ ml.loan_status_id  >=300  and ml.loan_status_id !=500
+and date(mlt.transaction_date) <='2026-08-17'
+union all 
+--  Tramsaction total mapped
+select 
+distinct 
+-- aga.name as ledgername,
+apm.gl_account_id                       as account_id,
+1                                       as office_id,
+null                                    as reversal_id,
+'INR'                                as currency_code,
+concat('L',mlt.id )                      as   transaction_id,
+mlt.id                                 as loan_transaction_id,
+null                                    assavings_transaction_id,
+null                                    asclient_transaction_id,
+0                                       as reversed,
+null                                    as ref_num,
+0                                       asmanual_entry,
+date(mlt.transaction_date  )              as entry_date,
+2                                       as type_enum,
+mlt.amount      as amount,
+null as description,
+1                                       as entity_type_enum,
+ml.id                            as entity_id,
+1                                       as createdby_id,
+1                                       as lastmodifiedby_id,
+CURRENT_DATE()                          as created_date,
+CURRENT_DATE()                          aslastmodified_date,
+1                                       as is_running_balance_calculated,
+0                                       asoffice_running_balance,
+0                                       asorganization_running_balance,
+null                                 as     payment_details_id,
+null                                    as share_transaction_id,
+null                                    as transaction_date,
+0                                       as is_voucher,
+null                                    as voucher_cv_id,
+null                                    as journal_entry_transaction_type_enum,
+null                                    as closure_entry_id
+from m_loan ml 
+inner join m_loan_transaction mlt on  mlt.loan_id =ml.id 
+inner join m_payment_detail mpd on mpd.id =mlt.payment_detail_id 
+inner join m_payment_type mpt on mpt.id =mpd.payment_type_id 
+inner  join m_client mc on mc.id=ml.client_id 
+inner join acc_product_mapping apm on apm.product_id =ml.product_id and apm.payment_type =mpt.id
+inner join acc_gl_account aga on aga.id =apm.gl_account_id  
+where 
+-- mlt.loan_id  =${loanid} and
+apm.financial_account_type=11
+and mlt.transaction_type_enum  in (16) and mlt.is_reversed =0
+and date(mlt.transaction_date) >'2026-03-31' and mlt.is_reversed =0 and 
+ ml.loan_status_id  >=300  and ml.loan_status_id !=500
+and date(mlt.transaction_date) <='2026-08-17'
+union all
+select 
+distinct 
+-- aga.name as ledgername,
+apm.gl_account_id                       as account_id,
+1                                       as office_id,
+null                                    as reversal_id,
+'INR'                                as currency_code,
+concat('L',mlt.id )                      as   transaction_id,
+mlt.id                                 as loan_transaction_id,
+null                                    assavings_transaction_id,
+null                                    asclient_transaction_id,
+0                                       as reversed,
+null                                    as ref_num,
+0                                       asmanual_entry,
+date(mlt.transaction_date  )              as entry_date,
+1                                       as type_enum,
+mlt.amount     as amount,
+null as description,
+1                                       as entity_type_enum,
+ml.id                            as entity_id,
+1                                       as createdby_id,
+1                                       as lastmodifiedby_id,
+CURRENT_DATE()                          as created_date,
+CURRENT_DATE()                          aslastmodified_date,
+1                                       as is_running_balance_calculated,
+0                                       asoffice_running_balance,
+0                                       asorganization_running_balance,
+null                                 as     payment_details_id,
+null                                    as share_transaction_id,
+null                                    as transaction_date,
+0                                       as is_voucher,
+null                                    as voucher_cv_id,
+null                                    as journal_entry_transaction_type_enum,
+null                                    as closure_entry_id
+from m_loan ml 
+inner join m_loan_transaction mlt on  mlt.loan_id =ml.id 
+left join m_client mc on mc.id=ml.client_id 
+left join acc_product_mapping apm on apm.product_id =ml.product_id  
+left join acc_gl_account aga on aga.id =apm.gl_account_id 
+where
+-- mlt.loan_id  =${loanid} and
+apm.financial_account_type=1
+and mlt.transaction_type_enum  in (16) and mlt.is_reversed =0 and apm.payment_type is null 
+and date(mlt.transaction_date) >'2026-03-31' and mlt.is_reversed =0 and 
+ ml.loan_status_id  >=300  and ml.loan_status_id !=500
+and date(mlt.transaction_date) <='2026-08-17';
