@@ -1,52 +1,6 @@
 use fineract_finasiacapital;
 
 
-select 
-apm.product_id ,
-aga.id as id ,
-aga.name ,
-case 
-when aga.classification_enum =1 then 'Asset'
-when aga.classification_enum =2 then 'Liability'
-when aga.classification_enum =3  then 'Equity'
-when aga.classification_enum =4 then 'Income'
-when aga.classification_enum =5 then 'Expense'
-end as ledgertype,
-CASE apm.financial_account_type
-    WHEN 1 THEN 'FUND_SOURCE'
-    WHEN 2 THEN 'LOAN_PORTFOLIO'
-    WHEN 3 THEN 'INTEREST_ON_LOANS'
-    WHEN 4 THEN 'INCOME_FROM_FEES'
-    WHEN 5 THEN 'INCOME_FROM_PENALTIES'
-    WHEN 6 THEN 'LOSSES_WRITTEN_OFF'
-    WHEN 7 THEN 'INTEREST_RECEIVABLE'
-    WHEN 8 THEN 'FEES_RECEIVABLE'
-    WHEN 9 THEN 'PENALTIES_RECEIVABLE'
-    WHEN 10 THEN 'TRANSFERS_SUSPENSE'
-    WHEN 11 THEN 'OVERPAYMENT'
-    WHEN 12 THEN 'INCOME_FROM_RECOVERY'
-    WHEN 13 THEN 'LOGIN_SUSPENSE'
-    WHEN 14 THEN 'DISBURSEMENT_CONTROL'
-    WHEN 15 THEN 'FUND_SOURCE_SUSPENSE'
-    WHEN 16 THEN 'VALUE_DATE_PAYABLE'
-    WHEN 17 THEN 'FORECLOSE_SUSPENSE'
-    WHEN 18 THEN 'TDS_RECEIVABLE'
-    WHEN 19 THEN 'BROKEN_PERIOD_INTEREST'
-    WHEN 20 THEN 'INTEREST_IN_SUSPENSE'
-END AS financial_account_type,
-mpt.value as PaymentType
-from acc_product_mapping apm
-left join acc_gl_account aga on aga.id =apm.gl_account_id 
-left join m_payment_type mpt on mpt.id =apm.payment_type 
-where apm.product_id =10
-order by apm.financial_account_type asc;
-
-
-
-
-
-use fineract_finasiacapital;
-
 -- EXCESS AMOUNT PAID  ACCOUNTING
 
 --  This for transaction type enum 27 
@@ -71,7 +25,7 @@ null                                    as ref_num,
 date(mlt.transaction_date  )              as entry_date,
 2                                       as type_enum,
 mlt.amount     as amount,
-concat('Repayment Received for account :',ml.display_loan_account_no ,' , Name: ',mc.display_name ) as description,
+concat('Repayment Received for account :',ml.account_no ,' , Name: ',mc.display_name ) as description,
 1                                       as entity_type_enum,
 ml.id                            as entity_id,
 1                                       as createdby_id,
@@ -136,7 +90,7 @@ null                                    as ref_num,
 date(mlt.transaction_date  )              as entry_date,
 2                                       as type_enum,
 mlt.amount      as amount,
-concat('Repayment Received for account :',ml.display_loan_account_no ,' , Name: ',mc.display_name ) as description,
+concat('Repayment Received for account :',ml.account_no ,' , Name: ',mc.display_name ) as description,
 1                                       as entity_type_enum,
 ml.id                            as entity_id,
 1                                       as createdby_id,
@@ -186,7 +140,7 @@ null                                    as ref_num,
 date(mlt.transaction_date  )              as entry_date,
 1                                       as type_enum,
 mlt.interest_portion_derived      as amount,
-concat('Repayment Received (Interest) for account :',ml.display_loan_account_no ,' , Name: ',mc.display_name ) as description,
+concat('Repayment Received (Interest) for account :',ml.account_no ,' , Name: ',mc.display_name ) as description,
 1                                       as entity_type_enum,
 ml.id                            as entity_id,
 1                                       as createdby_id,
@@ -234,7 +188,7 @@ null                                    as ref_num,
 date(mlt.transaction_date  )              as entry_date,
 1                                       as type_enum,
 mlt.principal_portion_derived      as amount,
-concat('Repayment Received (Principal) for account : ',ml.display_loan_account_no ,' , Name: ',mc.display_name ) as description,
+concat('Repayment Received (Principal) for account : ',ml.account_no ,' , Name: ',mc.display_name ) as description,
 1                                       as entity_type_enum,
 ml.id                            as entity_id,
 1                                       as createdby_id,
@@ -282,7 +236,7 @@ null                                    as ref_num,
 date(mlt.transaction_date  )              as entry_date,
 1                                       as type_enum,
 mlt.excess_amount      as amount,
-concat('Repayment Received (Overpayment) for account :',ml.display_loan_account_no ,' , Name: ',mc.display_name ) as description,
+concat('Repayment Received (Overpayment) for account :',ml.account_no ,' , Name: ',mc.display_name ) as description,
 1                                       as entity_type_enum,
 ml.id                            as entity_id,
 1                                       as createdby_id,
@@ -554,7 +508,7 @@ null                                    as  ref_num,
 date(mlt.transaction_date )              as  entry_date,
 1                                       as  type_enum,
 gst.gst     as  amount,
-concat('Repayment Received (Tax) for account : ',ml.display_loan_account_no ,' , Name: ',mc.display_name )as  description,
+concat('Repayment Received (Tax) for account : ',ml.account_no ,' , Name: ',mc.display_name )as  description,
 1                                       as  entity_type_enum,
 ml.id                            as  entity_id,
 1                                       as  createdby_id,
@@ -576,7 +530,7 @@ null                                    as  closure_entry_id
 -- 3 as ledgerid,
 -- 'SGST' as ledgername,
 -- 'Liability' as ledgertype,
--- concat('Disbursed charge received (Tax) : ',ml.display_loan_account_no ,' , Name: ',mc.display_name ) as descr,
+-- concat('Disbursed charge received (Tax) : ',ml.account_no ,' , Name: ',mc.display_name ) as descr,
 -- 'Charge' as chargtype,
 -- mlc.loan_id ,
 -- round(sum(mlc.charge_tax),2)/2 as totaltax
@@ -637,7 +591,7 @@ null                                    as  ref_num,
 date(mlt.transaction_date )              as  entry_date,
 1                                       as  type_enum,
 gst.gst     as  amount,
-concat('Repayment Received (Tax) for account : ',ml.display_loan_account_no ,' , Name: ',mc.display_name )as  description,
+concat('Repayment Received (Tax) for account : ',ml.account_no ,' , Name: ',mc.display_name )as  description,
 1                                       as  entity_type_enum,
 ml.id                            as  entity_id,
 1                                       as  createdby_id,
@@ -659,7 +613,7 @@ null                                    as  closure_entry_id
 -- 3 as ledgerid,
 -- 'SGST' as ledgername,
 -- 'Liability' as ledgertype,
--- concat('Disbursed charge received (Tax) : ',ml.display_loan_account_no ,' , Name: ',mc.display_name ) as descr,
+-- concat('Disbursed charge received (Tax) : ',ml.account_no ,' , Name: ',mc.display_name ) as descr,
 -- 'Charge' as chargtype,
 -- mlc.loan_id ,
 -- round(sum(mlc.charge_tax),2)/2 as totaltax
@@ -702,13 +656,3 @@ gst.trxid
 having sum(gst.gst)>0 ) gst  on gst.loanid=ml.id 
 inner  join m_loan_transaction mlt on mlt.id=gst.trxid
 left join m_client mc on mc.id=ml.client_id ;
-
-
-
-
-
-
-
-
-
-
