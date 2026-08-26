@@ -31,3 +31,152 @@ where agje.type_enum =2)
 update acc_gl_journal_entry agje 
 inner join cte t on t.accountingid=agje.id 
 set agje.account_id=t.ledgerid;
+
+
+
+
+
+
+
+
+
+UPDATE fineract_finasiacapital.acc_gl_journal_entry
+SET amount=6911.860000
+WHERE loan_transaction_id=8976 and entity_id =643 and account_id =229
+and amount =6911.870000;
+
+UPDATE fineract_finasiacapital.acc_gl_journal_entry
+SET amount=22911.860000
+WHERE loan_transaction_id=5321 and entity_id =535 and account_id =230
+and amount =22911.870000;
+
+
+UPDATE fineract_finasiacapital.acc_gl_journal_entry
+SET amount=1610.160000
+WHERE loan_transaction_id=8784 and entity_id =651 and account_id =248
+and amount =1610.170000;
+
+
+UPDATE fineract_finasiacapital.acc_gl_journal_entry
+SET amount=1610.160000
+WHERE loan_transaction_id=3722 and entity_id =364 and account_id =211
+and amount =100.000000;
+
+UPDATE fineract_finasiacapital.acc_gl_journal_entry
+SET amount=8.920000
+WHERE loan_transaction_id=3722 and entity_id =364 and account_id =2
+and amount =9.000000;
+
+UPDATE fineract_finasiacapital.acc_gl_journal_entry
+SET amount=8.920000
+WHERE loan_transaction_id=3722 and entity_id =364 and account_id =3
+and amount =9.000000;
+
+
+UPDATE fineract_finasiacapital.acc_gl_journal_entry
+SET amount=66.1000
+WHERE loan_transaction_id=9184 and entity_id =379 and account_id =211
+and amount =100.000000;
+
+UPDATE fineract_finasiacapital.acc_gl_journal_entry
+SET amount=95.9500
+WHERE loan_transaction_id=9184 and entity_id =379 and account_id =2
+and amount =99.000000;
+
+UPDATE fineract_finasiacapital.acc_gl_journal_entry
+SET amount=95.9500
+WHERE loan_transaction_id=9184 and entity_id =379 and account_id =3
+and amount =99.000000;
+
+
+UPDATE fineract_finasiacapital.acc_gl_journal_entry
+SET amount=21.18
+WHERE loan_transaction_id=9209 and entity_id =441 and account_id =211
+and amount =100.000000;
+
+UPDATE fineract_finasiacapital.acc_gl_journal_entry
+SET amount=1.91
+WHERE loan_transaction_id=9209 and entity_id =441 and account_id =2
+and amount =9.000000;
+
+UPDATE fineract_finasiacapital.acc_gl_journal_entry
+SET amount=1.91
+WHERE loan_transaction_id=9209 and entity_id =441 and account_id =3
+and amount =9.000000;
+
+INSERT INTO acc_gl_journal_entry
+(account_id, office_id, reversal_id, currency_code, transaction_id, loan_transaction_id, savings_transaction_id, client_transaction_id, reversed, ref_num, manual_entry, entry_date, type_enum, amount, description, entity_type_enum, entity_id, createdby_id, lastmodifiedby_id, created_date, lastmodified_date, is_running_balance_calculated, office_running_balance, organization_running_balance, payment_details_id, share_transaction_id, transaction_date, is_voucher, voucher_cv_id, journal_entry_transaction_type_enum, closure_entry_id)
+VALUES(75, 1, NULL, 'INR', 'L9111', 9111, NULL, NULL, 0, NULL, 0, '2026-07-18', 1, 9947.000000, 'Repayment Received (Overpayment) for account: mpJPR000000378, Name: HITENDRA SINGH', 1, 378, 12, 12, '2026-07-28 15:08:28', '2026-07-28 15:08:28', 1, 9947.000000, 10071.000000, NULL, NULL, NULL, 0, NULL, NULL, NULL);
+
+UPDATE fineract_finasiacapital.acc_gl_journal_entry
+SET amount=228.82
+WHERE loan_transaction_id=9165 and entity_id =333 and account_id =139
+and amount =1000.000000;
+
+UPDATE fineract_finasiacapital.acc_gl_journal_entry
+SET amount=29.59
+WHERE loan_transaction_id=9165 and entity_id =333 and account_id =3
+and amount =99.000000;
+
+UPDATE fineract_finasiacapital.acc_gl_journal_entry
+SET amount=29.59
+WHERE loan_transaction_id=9165 and entity_id =333 and account_id =2
+and amount =99.000000;
+
+
+UPDATE fineract_finasiacapital.acc_gl_journal_entry
+SET amount=390.68
+WHERE loan_transaction_id=9123 and entity_id =235 and account_id =139
+and amount =1000.000000;
+
+UPDATE fineract_finasiacapital.acc_gl_journal_entry
+SET amount=44.16
+WHERE loan_transaction_id=9123 and entity_id =235 and account_id =3
+and amount =99.000000;
+
+UPDATE fineract_finasiacapital.acc_gl_journal_entry
+SET amount=44.16
+WHERE loan_transaction_id=9123 and entity_id =235 and account_id =2
+and amount =99.000000;
+
+
+
+UPDATE fineract_finasiacapital.acc_gl_journal_entry
+SET amount=99.16
+WHERE loan_transaction_id=3722 and entity_id =364 and account_id =211
+and amount =1610.160000;
+
+
+
+UPDATE fineract_finasiacapital.acc_gl_journal_entry
+SET amount=849.14
+WHERE loan_transaction_id=5291 and entity_id =350 and account_id =55
+and amount =1000.000000;
+
+UPDATE fineract_finasiacapital.acc_gl_journal_entry
+SET amount=76.43
+WHERE loan_transaction_id=5291 and entity_id =350 and account_id =3
+and amount =90.000000;
+
+UPDATE fineract_finasiacapital.acc_gl_journal_entry
+SET amount=76.43
+WHERE loan_transaction_id=5291 and entity_id =350 and account_id =2
+and amount =90.000000;
+
+delete from 
+acc_gl_journal_entry 
+where loan_transaction_id=5293 
+and account_id in (55,2,3);
+
+
+INSERT INTO acc_gl_journal_entry
+(account_id, office_id, reversal_id, currency_code, transaction_id, loan_transaction_id, savings_transaction_id, client_transaction_id, reversed, ref_num, manual_entry, entry_date, type_enum, amount, description, entity_type_enum, entity_id, createdby_id, lastmodifiedby_id, created_date, lastmodified_date, is_running_balance_calculated, office_running_balance, organization_running_balance, payment_details_id, share_transaction_id, transaction_date, is_voucher, voucher_cv_id, journal_entry_transaction_type_enum, closure_entry_id)
+VALUES(55, 1, NULL, 'INR', 'L5293', 5293, NULL, NULL, 0, NULL, 0, '2026-05-28', 1, 1150.840000, NULL, 1, 350, 1, 1, '2026-08-26 00:00:00', '2026-08-26 00:00:00', 1, 0.000000, 0.000000, NULL, NULL, NULL, 0, NULL, NULL, NULL);
+INSERT INTO acc_gl_journal_entry
+(account_id, office_id, reversal_id, currency_code, transaction_id, loan_transaction_id, savings_transaction_id, client_transaction_id, reversed, ref_num, manual_entry, entry_date, type_enum, amount, description, entity_type_enum, entity_id, createdby_id, lastmodifiedby_id, created_date, lastmodified_date, is_running_balance_calculated, office_running_balance, organization_running_balance, payment_details_id, share_transaction_id, transaction_date, is_voucher, voucher_cv_id, journal_entry_transaction_type_enum, closure_entry_id)
+VALUES(2, 1, NULL, 'INR', 'L5293', 5293, NULL, NULL, 0, NULL, 0, '2026-05-28', 1, 103.580000, 'Repayment Received (Tax) for account : mpJPR000000350 , Name: MUKESH KUMAR MEENA', 1, 350, 1, 1, '2026-08-26 00:00:00', '2026-08-26 00:00:00', 1, 0.000000, 0.000000, NULL, NULL, NULL, 0, NULL, NULL, NULL);
+INSERT INTO acc_gl_journal_entry
+(account_id, office_id, reversal_id, currency_code, transaction_id, loan_transaction_id, savings_transaction_id, client_transaction_id, reversed, ref_num, manual_entry, entry_date, type_enum, amount, description, entity_type_enum, entity_id, createdby_id, lastmodifiedby_id, created_date, lastmodified_date, is_running_balance_calculated, office_running_balance, organization_running_balance, payment_details_id, share_transaction_id, transaction_date, is_voucher, voucher_cv_id, journal_entry_transaction_type_enum, closure_entry_id)
+VALUES(3, 1, NULL, 'INR', 'L5293', 5293, NULL, NULL, 0, NULL, 0, '2026-05-28', 1, 103.580000, 'Repayment Received (Tax) for account : mpJPR000000350 , Name: MUKESH KUMAR MEENA', 1, 350, 1, 1, '2026-08-26 00:00:00', '2026-08-26 00:00:00', 1, 0.000000, 0.000000, NULL, NULL, NULL, 0, NULL, NULL, NULL);
+
+
