@@ -334,4 +334,4 @@ apm.financial_account_type=7
 and mlt.transaction_type_enum in (4) and mlt.is_reversed =0  and mlt.interest_portion_derived is not null and mlt.interest_portion_derived >0
 and date(mlt.transaction_date) >'2026-03-31' and mlt.is_reversed =0 and mlt.amount >0 
 and  ml.loan_status_id  >=300  and ml.loan_status_id !=500
-and date(mlt.transaction_date) <='2026-08-17'
+and date(mlt.transaction_date) <='2026-08-17';
