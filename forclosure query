@@ -1,0 +1,33 @@
+
+with cte as (
+select 
+trxid.ledgerid,
+agje.id as accountingid
+from acc_gl_journal_entry agje 
+inner join (select 
+mlt.loan_id as lid,
+max(mlt.id) as trxid,
+trx.ledgerid as ledgerid
+from m_loan_transaction mlt 
+inner  join (select 
+distinct 
+ml.id as loanid ,
+agje.account_id as ledgerid
+from m_loan_transaction mlt 
+inner join acc_gl_journal_entry agje on agje.loan_transaction_id =mlt.id 
+left join m_loan ml on ml.id =mlt.loan_id
+left join acc_product_mapping apm on apm.product_id =ml.product_id and apm.gl_account_id =agje.account_id 
+where date(mlt.transaction_date) >'2026-03-31' and mlt.is_reversed =0 and 
+ml.loan_status_id >=300 and ml.loan_status_id !=500
+and mlt.transaction_type_enum in (25)
+and date(mlt.transaction_date) <='2026-08-17'
+and apm.financial_account_type =17
+and mlt.amount >0) trx on trx.loanid=mlt.loan_id 
+where 
+mlt.is_reversed =0
+and mlt.transaction_type_enum =2
+group by mlt.loan_id ) trxid on trxid.trxid=agje.loan_transaction_id 
+where agje.type_enum =2)
+update acc_gl_journal_entry agje 
+inner join cte t on t.accountingid=agje.id 
+set agje.account_id=t.ledgerid;
