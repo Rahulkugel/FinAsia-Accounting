@@ -70,7 +70,7 @@ and date(mlt.transaction_date) >'2026-03-31' and mlt.is_reversed =0 and
 and date(mlt.transaction_date) <='2026-08-17'
 and mlt.amount >0
 union all 
---  Tramsaction total mapped
+--  Transaction total mapped
 select 
 distinct 
 -- aga.name as ledgername,
@@ -121,7 +121,6 @@ and ml.loan_status_id  >=300  and ml.loan_status_id !=500
 and date(mlt.transaction_date) <='2026-08-17'
 and mlt.amount >0
 union all
-
 select 
 distinct 
 -- aga.name as ledgername,
@@ -168,5 +167,4 @@ and mlt.transaction_type_enum  in (25) and mlt.is_reversed =0 and apm.payment_ty
 and date(mlt.transaction_date) >'2026-03-31' and mlt.is_reversed =0 
 and ml.loan_status_id  >=300  and ml.loan_status_id !=500
 and date(mlt.transaction_date) <='2026-08-17'
-and mlt.amount >0
-
+and mlt.amount >0;
