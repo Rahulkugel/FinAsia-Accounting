@@ -1,0 +1,24 @@
+--  IMPORTANT  
+
+with cte as (select
+agje.id 
+from acc_gl_journal_entry agje 
+left join m_loan ml on ml.id =agje.entity_id 
+left join m_product_loan mpl on mpl.id =ml.product_id
+left join acc_gl_account aga on aga.id =agje.account_id 
+where agje.entity_id in  (select 
+ml.id 
+from m_loan ml 
+inner join m_loan_advance_charge_transaction mlt on  mlt.loan_id =ml.id 
+inner join m_loan_advance_charge_paid_by mlacpb on mlacpb.loan_advance_transaction_id =mlt.id 
+inner join m_loan_advance_charge mlac on mlac.id=mlacpb.loan_advance_charge_id
+where mlt.transaction_date >'2026-03-31' and  mlt.transaction_date <'2026-08-18'
+and ml.loan_status_id !=500)
+and agje.description  like '%login%')
+delete from  acc_gl_journal_entry 
+where entry_date >='2026-04-01'   and entry_date <'2026-08-18'
+and id not in (select
+* from cte
+);
+select * from acc_gl_journal_entry 
+where entry_date >='2026-04-01'   and entry_date <'2026-08-18'
