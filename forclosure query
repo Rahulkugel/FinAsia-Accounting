@@ -180,3 +180,81 @@ INSERT INTO acc_gl_journal_entry
 VALUES(3, 1, NULL, 'INR', 'L5293', 5293, NULL, NULL, 0, NULL, 0, '2026-05-28', 1, 103.580000, 'Repayment Received (Tax) for account : mpJPR000000350 , Name: MUKESH KUMAR MEENA', 1, 350, 1, 1, '2026-08-26 00:00:00', '2026-08-26 00:00:00', 1, 0.000000, 0.000000, NULL, NULL, NULL, 0, NULL, NULL, NULL);
 
 
+
+UPDATE fineract_finasiacapital.acc_gl_journal_entry
+SET amount=4505.070000
+WHERE loan_transaction_id=8708 and entity_id =173 and account_id =60
+and amount =4505.090000;
+
+
+UPDATE fineract_finasiacapital.acc_gl_journal_entry
+SET amount=123451.680000
+WHERE loan_transaction_id=4891 and entity_id =468 and account_id =61
+and amount =123451.700000;
+
+
+UPDATE fineract_finasiacapital.acc_gl_journal_entry
+SET amount=34142.360000
+WHERE loan_transaction_id=8505 and entity_id =630 and account_id =316
+and amount =34142.370000;
+
+UPDATE fineract_finasiacapital.acc_gl_journal_entry
+SET amount=26142.360000
+WHERE loan_transaction_id=8510 and entity_id =632 and account_id =316
+and amount =26142.370000;
+
+
+UPDATE fineract_finasiacapital.acc_gl_journal_entry
+SET amount=1250.090000
+WHERE loan_transaction_id=8767 and entity_id =592 and account_id =2
+and amount =1250.085000;
+
+UPDATE fineract_finasiacapital.acc_gl_journal_entry
+SET amount=1250.090000
+WHERE loan_transaction_id=8767 and entity_id =592 and account_id =3
+and amount =1250.085000;
+
+UPDATE fineract_finasiacapital.acc_gl_journal_entry
+SET amount=805.080000
+WHERE loan_transaction_id=8767 and entity_id =592 and account_id =181
+and amount =805.090000;
+
+UPDATE fineract_finasiacapital.acc_gl_journal_entry
+SET amount=805.080000
+WHERE loan_transaction_id=8767 and entity_id =592 and account_id =247
+and amount =805.090000;
+
+UPDATE fineract_finasiacapital.acc_gl_journal_entry
+SET amount=26142.360000
+WHERE loan_transaction_id=8502 and entity_id =584 and account_id =316
+and amount =26142.370000;
+
+
+UPDATE fineract_finasiacapital.acc_gl_journal_entry
+SET amount=9127.960000
+WHERE loan_transaction_id=8192 and entity_id =576 and account_id =230
+and amount =9127.970000;
+
+
+
+UPDATE fineract_finasiacapital.acc_gl_journal_entry
+SET amount=1200.82000
+WHERE loan_transaction_id=7961 and entity_id =573 and account_id =2
+and amount =1200.815000;
+
+
+UPDATE fineract_finasiacapital.acc_gl_journal_entry
+SET amount=1200.82000
+WHERE loan_transaction_id=7961 and entity_id =573 and account_id =3
+and amount =1200.815000;
+
+UPDATE fineract_finasiacapital.acc_gl_journal_entry
+SET amount=10511.860000
+WHERE loan_transaction_id=7961 and entity_id =573 and account_id =230
+and amount =10511.870000;
+
+UPDATE fineract_finasiacapital.acc_gl_journal_entry
+SET amount=1610.160000
+WHERE loan_transaction_id=7961 and entity_id =573 and account_id =182
+and amount =1610.170000;
+
